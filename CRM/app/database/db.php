@@ -4,7 +4,7 @@ require('connect.php');
 
 
 // для респечатывания массива
-function tt($value) {
+function tt($value){
     echo '<pre>';
     print_r($value);
     echo '</pre>';
@@ -72,6 +72,44 @@ function selectOne($table, $params = []){
     return $query->fetch();;
 }
 
+//Запись в таблицу БД
+function inssert($table, $params){
+    global $pdo;
+    //INSERT INTO `users` (admin username email password) VALUES ('0', 'vasgen', 'vasgenchik@mail.ru', '123456');
+    $i = 0;
+    $coll = '';
+    $mask = '';
+    foreach($params as $key => $value) {
+        if($i === 0){
+            $coll = $key;
+            $mask = "'$value'";
+        } else {
+            $coll = $coll . ', ' . $key;
+            $mask = $mask . ', ' . "'$value'";
+        }
+        $i++;
+    }
+    
+    $sql = "INSERT INTO $table ($coll) VALUES ($mask);";
+    
+
+    tt($sql);                                //распечатка массива
+    //exit();
+    $query = $pdo->prepare($sql);          //подготовка
+    $query->execute();                     //обновление
+    dbCheckError($query);                  //возврат ошибок если есть
+}
+
+
+$arrData = [
+    'admin' => '1',
+    'username' => 'Evgeniy',
+    'email' => 'Evgeniy@mail.ru',
+    'password' => '123456',
+    'created' => '2023-11-11 00:00:01'
+];
+
+inssert('users', $arrData);
 
 // КОД ДЛЯ ТЕСТИРОВАНИЯ
 $params = [
@@ -79,24 +117,6 @@ $params = [
 ];
 
 
-tt(selectOne("users", $params));
-tt(selectAll("users", $params));
 
 
 
-// require 'connect.php';
-
-// $sql = "SELECT * FROM users";
-
-// $query = $pdo->prepare($sql);
-// $query->execute();
-// $errInfo = $query->errorInfo();
-
-// if ($errInfo[0] !== PDO::ERR_NONE) {
-//     echo $errInfo[2];
-//     exit();
-// }
-
-// $data = $query->fetch(PDO::FETCH_ASSOC);
-
-// print_r($data);
