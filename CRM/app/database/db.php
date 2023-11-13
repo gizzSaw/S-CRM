@@ -109,14 +109,53 @@ $arrData = [
     'created' => '2023-11-11 00:00:01'
 ];
 
-inssert('users', $arrData);
+
+
+function update($table, $id, $params){
+    global $pdo;
+    //INSERT INTO `users` (admin username email password) VALUES ('0', 'vasgen', 'vasgenchik@mail.ru', '123456');
+    $i = 0;
+    $str = '';
+    foreach($params as $key => $value) {
+        if($i === 0){
+            $str = "$key = '1'";
+        } else {
+            $str = $str . ", " . "$key = '$value'";
+        }
+        $i++;
+    }
+    
+    $sql = "UPDATE $table SET $str WHERE id =  $id;";
+    
+
+    tt($sql);                                //распечатка массива
+    //exit();
+    $query = $pdo->prepare($sql);          //подготовка
+    $query->execute();                     //обновление
+    dbCheckError($query);                  //возврат ошибок если есть
+}
+
 
 // КОД ДЛЯ ТЕСТИРОВАНИЯ
+
+
+$arrData = [
+    'admin' => '0',
+    'password' => '123',
+    'email' => 'test2@php.ru'
+];
+
+//inssert('users', $arrData);
+
+update('users', 17, $arrData);
+
 $params = [
     'admin' => 1
 ];
 
 
 
+//UPDATE `users` SET username = 'test' WHERE id = '17'
+//UPDATE `users` SET admin = '0' WHERE id = '3'
 
 
