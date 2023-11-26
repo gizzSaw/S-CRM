@@ -101,16 +101,8 @@ function inssert($table, $params){
 }
 
 
-$arrData = [
-    'admin' => '1',
-    'username' => 'Evgeniy',
-    'email' => 'Evgeniy@mail.ru',
-    'password' => '123456',
-    'created' => '2023-11-11 00:00:01'
-];
 
-
-
+//Обновление в таблице БД
 function update($table, $id, $params){
     global $pdo;
     //INSERT INTO `users` (admin username email password) VALUES ('0', 'vasgen', 'vasgenchik@mail.ru', '123456');
@@ -118,7 +110,7 @@ function update($table, $id, $params){
     $str = '';
     foreach($params as $key => $value) {
         if($i === 0){
-            $str = "$key = '1'";
+            $str = "$key = '$value'";
         } else {
             $str = $str . ", " . "$key = '$value'";
         }
@@ -136,23 +128,47 @@ function update($table, $id, $params){
 }
 
 
+//Удалиение из таблицы БД
+function delete($table, $id){
+    global $pdo;
+    //DELETE FROM `users` WHERE id = 23        
+    $sql = "DELETE FROM $table WHERE id =  $id;";
+    
+
+    tt($sql);                                //распечатка массива
+    //exit();
+    $query = $pdo->prepare($sql);          //подготовка
+    $query->execute();                     //обновление
+    dbCheckError($query);                  //возврат ошибок если есть
+}
+
 // КОД ДЛЯ ТЕСТИРОВАНИЯ
 
 
-$arrData = [
-    'admin' => '0',
-    'password' => '123',
-    'email' => 'test2@php.ru'
-];
+//изменение
+// $arrData = [
+//     'admin' => '0',
+//     'password' => '123456',
+//     'email' => 'test2@php.ru'
+// ];
+
+
+//добавлние
+// $arrData = [
+//     'admin' => '1',
+//     'username' => 'Evgeniy',
+//     'email' => 'Evgeniy@mail.ru',
+//     'password' => '123456',
+//     'created' => '2023-11-11 00:00:01'
+// ];
 
 //inssert('users', $arrData);
 
-update('users', 17, $arrData);
+// $params = [
+//     'admin' => 1
+// ];
 
-$params = [
-    'admin' => 1
-];
-
+delete('users', 22);
 
 
 //UPDATE `users` SET username = 'test' WHERE id = '17'
