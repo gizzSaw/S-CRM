@@ -73,7 +73,7 @@ function selectOne($table, $params = []){
 }
 
 //Запись в таблицу БД
-function inssert($table, $params){
+function insert($table, $params){
     global $pdo;
     //INSERT INTO `users` (admin username email password) VALUES ('0', 'vasgen', 'vasgenchik@mail.ru', '123456');
     $i = 0;
@@ -98,6 +98,8 @@ function inssert($table, $params){
     $query = $pdo->prepare($sql);          //подготовка
     $query->execute();                     //обновление
     dbCheckError($query);                  //возврат ошибок если есть
+
+    return $pdo->lastInsertId();
 }
 
 
@@ -162,13 +164,13 @@ function delete($table, $id){
 //     'created' => '2023-11-11 00:00:01'
 // ];
 
-//inssert('users', $arrData);
+//insert('users', $arrData);
 
 // $params = [
 //     'admin' => 1
 // ];
 
-delete('users', 22);
+//delete('users', 20);
 
 
 //UPDATE `users` SET username = 'test' WHERE id = '17'
